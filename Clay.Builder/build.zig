@@ -29,7 +29,7 @@ pub fn build(b: *std.Build) void {
     lib.linkLibC();
     lib.addIncludePath(b.path("src/clay/clay.h"));
     lib.addCSourceFile(.{ .file = b.path("src/clay.c"), .flags = &flags });
-    lib.defineCMacro("CLAY_DLL", "1");
+    lib.root_module.addCMacro("CLAY_DLL", "1");
 
     b.installArtifact(lib);
 }
