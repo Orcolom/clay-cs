@@ -3,7 +3,6 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using CommunityToolkit.HighPerformance;
 
-[assembly: DisableRuntimeMarshalling]
 namespace Clay_cs;
 
 public unsafe delegate Clay_Dimensions ClayMeasureTextDelegate(Clay_StringSlice slice, Clay_TextElementConfig* config, void* userData);

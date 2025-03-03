@@ -7,7 +7,8 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <IsAotCompatible>true</IsAotCompatible>
         <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
-        <TargetFrameworks>net9.0;net8.0</TargetFrameworks>
+        <TargetFrameworks>netstandard2.1;net9.0;net8.0</TargetFrameworks>
+        <LangVersion>latest</LangVersion>
 		<Deterministic>true</Deterministic>
 		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
 		<IncludeSymbols>true</IncludeSymbols>
@@ -25,6 +26,7 @@ GC safe, avoiding unneeded classes, and made as low level as possible</Descripti
         <PackageProjectUrl>https://github.com/Orcolom/clay-cs/</PackageProjectUrl>
 		<EnablePackageValidation>true</EnablePackageValidation>
 	</PropertyGroup>
+
 
 	<ItemGroup>
 		<Content Include="runtimes\**">
