@@ -4,7 +4,7 @@ public struct ClayElement : IDisposable
 {
 	public static ClayElement Open()
 	{
-		Clay.OpenElement();
+		ClayInterop.Clay__OpenElement();
 		return new ClayElement();
 	}
 	

@@ -1,3 +1,9 @@
+# 0.x.0 - 2024-04-14
+- Fixed: MeasureTextDelegate nog gets cached to avoid being collected by Gc
+- BREAKING: Merged `Clay.Element()` (without argument) into `Clay.OpenElement` to avoid confusion with `Clay.Element(Clay_ElementDeclaration)` as using `Clay.Element()` would cause unrecoverable exceptions if not closed.
+- BREAKING: Renamed `Clay.OpenTextElement` to `Clay.TextElement` as you don't have to close it.
+- Added: `Clay_CornerRadius` utility methods `Top()`, `Bottom()`, `Left()`,  `Right()`
+
 # 0.3.1 - 2024-03-02
 - First automated release
 - Added: nugget package to readme
