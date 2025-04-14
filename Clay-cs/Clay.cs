@@ -102,7 +102,9 @@ public static class Clay
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static unsafe void SetMeasureTextFunction(ClayMeasureTextDelegate measureText)
 	{
-		// TODO: do we need to dealloc the ptr?
+		var context = GetManagedContext();
+		context.MeasureText = measureText;
+		
 		var ptr = Marshal.GetFunctionPointerForDelegate(measureText);
 		var castPtr = (delegate* unmanaged[Cdecl]<Clay_StringSlice, Clay_TextElementConfig*, void*, Clay_Dimensions>)ptr;
 		ClayInterop.Clay_SetMeasureTextFunction(castPtr, null);
@@ -244,19 +246,16 @@ public static class Clay
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static void OpenElement()
+	public static ClayElement OpenElement() => ClayElement.Open();
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static void TextElement(string text, Clay_TextElementConfig c)
 	{
-		ClayInterop.Clay__OpenElement();
+		TextElement(ClayStrings.Get(text), c);
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static void OpenTextElement(string text, Clay_TextElementConfig c)
-	{
-		OpenTextElement(ClayStrings.Get(text), c);
-	}
-
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static unsafe void OpenTextElement(Clay_String text, Clay_TextElementConfig c)
+	public static unsafe void TextElement(Clay_String text, Clay_TextElementConfig c)
 	{
 		ClayInterop.Clay__OpenTextElement(text, ClayInterop.Clay__StoreTextElementConfig(c));
 	}
@@ -271,11 +270,6 @@ public static class Clay
 	public static void CloseElement()
 	{
 		ClayInterop.Clay__CloseElement();
-	}
-
-	public static ClayElement Element()
-	{
-		return ClayElement.Open();
 	}
 	
 	public static ClayElement Element(Clay_ElementDeclaration declaration)

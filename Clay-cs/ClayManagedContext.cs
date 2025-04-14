@@ -6,6 +6,7 @@ namespace Clay_cs;
 internal class ClayManagedContext
 {
 	public nint ArenaMemory = default;
+	public ClayMeasureTextDelegate MeasureText;
 	public ClayErrorDelegate ErrorHandler = null!;
 	public ClayQueryScrollOffsetDelegate QueryScrollOffset = null!;
 	public readonly List<ClayOnHoverDelegate> OnHover = [];

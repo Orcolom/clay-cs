@@ -120,7 +120,7 @@ public class IntroducingClay : IDisposable
 						cornerRadius = Clay_CornerRadius.All(5),
 					}))
 					{
-						Clay.OpenTextElement("File", new()
+						Clay.TextElement("File", new()
 						{
 							fontSize = 16,
 							textColor = new Clay_Color(255, 255, 255),
@@ -226,7 +226,7 @@ public class IntroducingClay : IDisposable
 									cornerRadius = Clay_CornerRadius.All(8),
 								}))
 								{
-									Clay.OpenTextElement(document.Title, new()
+									Clay.TextElement(document.Title, new()
 									{
 										fontSize = 20,
 										textColor = new Clay_Color(255, 255, 255),
@@ -235,7 +235,7 @@ public class IntroducingClay : IDisposable
 							}
 							else
 							{
-								using (var sidebarButton = Clay.Element())
+								using (var sidebarButton = Clay.OpenElement())
 								{
 									sidebarButton.Configure(new()
 									{
@@ -254,7 +254,7 @@ public class IntroducingClay : IDisposable
 											_selectedDocumentIndex = index;
 										}
 									});
-									Clay.OpenTextElement(document.Title, new()
+									Clay.TextElement(document.Title, new()
 									{
 										fontSize = 20,
 										textColor = new Clay_Color(255, 255, 255),
@@ -282,12 +282,12 @@ public class IntroducingClay : IDisposable
 					}))
 					{
 						var doc = _documents[_selectedDocumentIndex];
-						Clay.OpenTextElement(doc.Title, new()
+						Clay.TextElement(doc.Title, new()
 						{
 							fontSize = 24,
 							textColor = new Clay_Color(255, 255, 255),
 						});
-						Clay.OpenTextElement(doc.Contents, new()
+						Clay.TextElement(doc.Contents, new()
 						{
 							fontSize = 24,
 							textColor = new Clay_Color(255, 255, 255),
@@ -318,7 +318,7 @@ public class IntroducingClay : IDisposable
 			cornerRadius = Clay_CornerRadius.All(5),
 		}))
 		{
-			Clay.OpenTextElement(text, new Clay_TextElementConfig
+			Clay.TextElement(text, new Clay_TextElementConfig
 			{
 				fontSize = 16,
 				textColor = new Clay_Color(255, 255, 255),
@@ -336,7 +336,7 @@ public class IntroducingClay : IDisposable
 			}
 		}))
 		{
-			Clay.OpenTextElement(text, new Clay_TextElementConfig
+			Clay.TextElement(text, new Clay_TextElementConfig
 			{
 				fontSize = 16,
 				textColor = new Clay_Color(255, 255, 255),
