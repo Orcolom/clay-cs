@@ -4,6 +4,8 @@ namespace Clay_cs;
 
 public unsafe partial struct Clay_String
 {
+    public bool isStaticallyAllocated;
+
     [NativeTypeName("int32_t")]
     public int length;
 
@@ -148,7 +150,7 @@ public unsafe partial struct Clay_String
 
     public partial struct Clay_SizingAxis
     {
-        [NativeTypeName("__AnonymousRecord_clay_L288_C5")]
+        [NativeTypeName("__AnonymousRecord_clay_L307_C5")]
         public ClaySizingUnion size;
 
         public Clay__SizingType type;
@@ -216,8 +218,10 @@ public unsafe partial struct Clay_String
         CLAY_TEXT_ALIGN_RIGHT,
     }
 
-    public partial struct Clay_TextElementConfig
+    public unsafe partial struct Clay_TextElementConfig
     {
+        public void* userData;
+
         public Clay_Color textColor;
 
         [NativeTypeName("uint16_t")]
@@ -235,8 +239,6 @@ public unsafe partial struct Clay_String
         public Clay_TextElementConfigWrapMode wrapMode;
 
         public Clay_TextAlignment textAlignment;
-
-        public bool hashStringContents;
     }
 
     public unsafe partial struct Clay_ImageElementConfig
@@ -565,7 +567,7 @@ public unsafe partial struct Clay_String
         public static extern uint Clay_MinMemorySize();
 
         [DllImport("Clay", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern Clay_Arena Clay_CreateArenaWithCapacityAndMemory([NativeTypeName("uint32_t")] uint capacity, void* memory);
+        public static extern Clay_Arena Clay_CreateArenaWithCapacityAndMemory([NativeTypeName("size_t")] nuint capacity, void* memory);
 
         [DllImport("Clay", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void Clay_SetPointerState(Clay_Vector2 position, bool pointerDown);
@@ -652,6 +654,9 @@ public unsafe partial struct Clay_String
 
         [DllImport("Clay", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void Clay__ConfigureOpenElement([NativeTypeName("const Clay_ElementDeclaration")] Clay_ElementDeclaration config);
+
+        [DllImport("Clay", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        public static extern void Clay__ConfigureOpenElementPtr([NativeTypeName("const Clay_ElementDeclaration *")] Clay_ElementDeclaration* config);
 
         [DllImport("Clay", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void Clay__CloseElement();
