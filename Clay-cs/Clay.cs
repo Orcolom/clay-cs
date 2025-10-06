@@ -63,7 +63,7 @@ public static class Clay
 		var arena = ClayInterop.Clay_CreateArenaWithCapacityAndMemory(memorySize, (void*)ptr);
 		return new ClayArenaHandle { Arena = arena, Memory = ptr };
 	}
-	
+
 	internal static void FreeArena(ClayArenaHandle handle)
 	{
 		// use the memory to find the linked context
@@ -75,18 +75,18 @@ public static class Clay
 				key = clayContext.Key;
 			}
 		}
-		
+
 		// free everything
 		ClayContexts.Remove(key);
 		Marshal.FreeHGlobal(handle.Memory);
 	}
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static unsafe Clay_Context* GetCurrentContext()
 	{
 		return ClayInterop.Clay_GetCurrentContext();
 	}
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	internal static unsafe ClayManagedContext GetManagedContext()
 	{
@@ -100,34 +100,35 @@ public static class Clay
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static unsafe void SetMeasureTextFunction(ClayMeasureTextDelegate measureText)
+	public static unsafe void SetMeasureTextFunction(ClayMeasureTextDelegate measureText, void* userData = null)
 	{
 		// TODO: do we need to dealloc the ptr?
 		var ptr = Marshal.GetFunctionPointerForDelegate(measureText);
 		var castPtr = (delegate* unmanaged[Cdecl]<Clay_StringSlice, Clay_TextElementConfig*, void*, Clay_Dimensions>)ptr;
-		ClayInterop.Clay_SetMeasureTextFunction(castPtr, null);
+		ClayInterop.Clay_SetMeasureTextFunction(castPtr, userData);
 	}
 
 	public static unsafe Clay_Context* Initialize(
 		ClayArenaHandle handle,
 		Clay_Dimensions dimensions,
-		ClayErrorDelegate errorHandler)
+		ClayErrorDelegate errorHandler,
+		void* errorUserData = null)
 	{
-		// TODO: handle userdata
 		var ptr = Marshal.GetFunctionPointerForDelegate(errorHandler);
 		var castPtr = (delegate* unmanaged[Cdecl]<Clay_ErrorData, void>)ptr;
 
 		var context = ClayInterop.Clay_Initialize(handle.Arena, dimensions, new Clay_ErrorHandler
 		{
 			errorHandlerFunction = castPtr,
-		});
+			userData = errorUserData,
+        });
 
 		ClayContexts[(IntPtr)context] = new ClayManagedContext
 		{
 			ErrorHandler = errorHandler,
 			ArenaMemory = handle.Memory,
 		};
-		
+
 		return context;
 	}
 
@@ -191,7 +192,7 @@ public static class Clay
 	{
 		var context = GetManagedContext();
 		context.OnHover.Add(onHover);
-		
+
 		var ptr = Marshal.GetFunctionPointerForDelegate(onHover);
 		var castPtr = (delegate* unmanaged[Cdecl]<Clay_ElementId, Clay_PointerData, nint, void>)ptr;
 		ClayInterop.Clay_OnHover(castPtr, userData);
@@ -209,14 +210,14 @@ public static class Clay
 		ClayInterop.Clay_UpdateScrollContainers(enableDragScrolling, moveDelta, timeDelta);
 	}
 
-	public static unsafe void SetQueryScrollOffsetFunction(ClayQueryScrollOffsetDelegate queryScrollOffsetFunction)
+	public static unsafe void SetQueryScrollOffsetFunction(ClayQueryScrollOffsetDelegate queryScrollOffsetFunction, void* userData = null)
 	{
 		var context = GetManagedContext();
 		context.QueryScrollOffset = queryScrollOffsetFunction;
-		
+
 		var ptr = Marshal.GetFunctionPointerForDelegate(queryScrollOffsetFunction);
 		var castPtr = (delegate* unmanaged[Cdecl]<uint, void*, Clay_Vector2>)ptr;
-		ClayInterop.Clay_SetQueryScrollOffsetFunction(castPtr, null);
+		ClayInterop.Clay_SetQueryScrollOffsetFunction(castPtr, userData);
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -277,7 +278,7 @@ public static class Clay
 	{
 		return ClayElement.Open();
 	}
-	
+
 	public static ClayElement Element(Clay_ElementDeclaration declaration)
 	{
 		return ClayElement.Open().Configure(declaration);
