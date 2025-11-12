@@ -5,12 +5,25 @@ using static SimpleExec.Command;
 
 string workingDirectory = Path.GetDirectoryName(Utilities.GetFilePath())!;
 
+
+static string FixString(string input)
+{
+    if(string.IsNullOrWhiteSpace(input)) return "\"\"";
+
+    input = input.Trim();
+    if(input.Length > 1 && input[0] == '"' && input[^1] == '"')
+        return input;
+
+    return input.Contains(' ') || input.Contains('\t') ? $"\"{input}\"" : input;
+}
+
 Target("Interop", () =>
 {
 	string clayH = Path.Combine(workingDirectory, "src/clay/clay.h");
 	string clayCs = Path.Combine(workingDirectory, "../Clay-cs/Interop/ClayInterop.cs");
 
-	var interopArgs = string.Join(' ', [
+
+    var interopArgs = string.Join(' ', [
 		string.Join(' ', [
 			"--config",
 			"generate-file-scoped-namespaces",
@@ -74,18 +87,18 @@ Target("Interop", () =>
 		"--namespace Clay_cs",
 		"--methodClassName ClayInterop",
 		"--libraryPath Clay",
-		$"--file {clayH}",
-		$"--output {clayCs}",
+		$"--file {FixString(clayH)}",
+		$"--output {FixString(clayCs)}",
 	]);
 	Run("ClangSharpPInvokeGenerator", interopArgs, workingDirectory);
 
 	// ClangSharpPInvokeGenerator is adding a trailing '}' that breaks compilation
 	var text = File.ReadAllText(clayCs);
-	var idx = text.LastIndexOf('}');
-	text = text.Substring(0, idx);
+    var idx = text.LastIndexOf('}');
+    if(idx >= 0) text = text.Substring(0, idx);
 
-	// fix naming
-	text = text.Replace("_size_e__Union", "ClaySizingUnion");
+    // fix naming
+    text = text.Replace("_size_e__Union", "ClaySizingUnion");
 
 	File.WriteAllText(clayCs, text);
 });
