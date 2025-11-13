@@ -4,18 +4,6 @@ using static SimpleExec.Command;
 
 string workingDirectory = Path.GetDirectoryName(Utilities.GetFilePath())!;
 
-
-static string FixString(string input)
-{
-    if(string.IsNullOrWhiteSpace(input)) return "\"\"";
-
-    input = input.Trim();
-    if(input.Length > 1 && input[0] == '"' && input[^1] == '"')
-        return input;
-
-    return input.Contains(' ') || input.Contains('\t') ? $"\"{input}\"" : input;
-}
-
 Target("Interop", () =>
 {
 	string clayH = Path.Combine(workingDirectory, "src/clay/clay.h");
@@ -86,8 +74,8 @@ Target("Interop", () =>
 		"--namespace Clay_cs",
 		"--methodClassName ClayInterop",
 		"--libraryPath Clay",
-		$"--file {FixString(clayH)}",
-		$"--output {FixString(clayCs)}",
+		$"--file \"{(clayH)}\"",
+		$"--output \"{(clayCs)}\"",
 	]);
 	Run("ClangSharpPInvokeGenerator", interopArgs, workingDirectory);
 
