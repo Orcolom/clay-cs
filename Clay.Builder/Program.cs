@@ -1,5 +1,6 @@
-﻿using System.Runtime.CompilerServices;
-using Clay.Builder;
+﻿using Clay.Builder;
+using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using static Bullseye.Targets;
 using static SimpleExec.Command;
 
@@ -100,7 +101,7 @@ Target("Interop", () =>
     // fix naming
     text = text.Replace("_size_e__Union", "ClaySizingUnion");
 
-	File.WriteAllText(clayCs, text);
+    File.WriteAllText(clayCs, text);
 });
 
 // -------------------------------------------------------------
