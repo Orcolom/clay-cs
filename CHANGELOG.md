@@ -4,6 +4,7 @@
 - BREAKING: Merged `Clay.Element()` (without argument) into `Clay.OpenElement` to avoid confusion with `Clay.Element(Clay_ElementDeclaration)` as using `Clay.Element()` would cause unrecoverable exceptions if not closed.
 - BREAKING: Renamed `Clay.OpenTextElement` to `Clay.TextElement` as you don't have to close it.
 - Added: `Clay_CornerRadius` utility methods `Top()`, `Bottom()`, `Left()`,  `Right()`
+- Added support for `netstandard2.1`.
 
 # 0.3.1 - 2024-03-02
 - First automated release
