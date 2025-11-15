@@ -70,6 +70,9 @@ public class IntroducingClay : IDisposable
 		
 		while (Raylib.WindowShouldClose() == false)
 		{
+			// NOTE: this is here to force GC errors to show up consistently, You should never have this in your actual code!!!
+			GC.Collect();
+
 			Clay.SetLayoutDimensions(new Clay_Dimensions
 			{
 				width = Raylib.GetScreenWidth(),
@@ -125,7 +128,6 @@ public class IntroducingClay : IDisposable
 							textColor = new Clay_Color(255, 255, 255),
 						});
 
-						Console.WriteLine(Clay.IsPointerOver(Clay.GetElementId(fileButtonStr)));
 						bool isMenuVisible = Clay.IsPointerOver(Clay.GetElementId(fileButtonStr))
 							|| Clay.IsPointerOver(Clay.GetElementId(fileMenuStr));
 
