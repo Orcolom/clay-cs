@@ -8,6 +8,12 @@ public struct ClayElement : IDisposable
 		return new ClayElement();
 	}
 	
+	public static ClayElement Open(Clay_ElementId id)
+	{
+		ClayInterop.Clay__OpenElementWithId(id);
+		return new ClayElement();
+	}
+	
 	public static ClayElement OpenAndConfigure(Clay_ElementDeclaration declaration)
 	{
 		return Open().Configure(declaration);

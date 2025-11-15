@@ -68,6 +68,7 @@ Target("Interop", () =>
 			"Clay__Clay_ErrorTypeWrapper",
 			"Clay__Clay_ErrorDataWrapper",
 			"Clay__Clay_ErrorHandlerWrapper",
+			"Clay__Clay_ClipElementConfigWrapper",
 			"Clay__StringArray",
 			"Clay__SuppressUnusedLatchDefinitionVariableWarning",
 		]),

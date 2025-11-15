@@ -1,3 +1,6 @@
+# 0.4.x - 2025-11-15
+- updated clay from 0.13.0 `b33ba4f` to 0.14.0 `c13feb2`
+- 
 # 0.x.0 - 2024-04-14
 - Fixed: MeasureTextDelegate nog gets cached to avoid being collected by Gc
 - BREAKING: Merged `Clay.Element()` (without argument) into `Clay.OpenElement` to avoid confusion with `Clay.Element(Clay_ElementDeclaration)` as using `Clay.Element()` would cause unrecoverable exceptions if not closed.

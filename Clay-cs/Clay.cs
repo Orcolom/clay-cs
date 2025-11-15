@@ -211,6 +211,12 @@ public static class Clay
 		ClayInterop.Clay_UpdateScrollContainers(enableDragScrolling, moveDelta, timeDelta);
 	}
 
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static Vector2 GetScrollOffset()
+	{
+		return ClayInterop.Clay_GetScrollOffset();
+	}
+
 	public static unsafe void SetQueryScrollOffsetFunction(ClayQueryScrollOffsetDelegate queryScrollOffsetFunction)
 	{
 		var context = GetManagedContext();
@@ -247,6 +253,9 @@ public static class Clay
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static ClayElement OpenElement() => ClayElement.Open();
+	
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static ClayElement OpenElement(Clay_ElementId id) => ClayElement.Open(id);
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static void TextElement(string text, Clay_TextElementConfig c)
@@ -276,6 +285,11 @@ public static class Clay
 	{
 		return ClayElement.Open().Configure(declaration);
 	}
+	
+	public static ClayElement Element(Clay_ElementId id, Clay_ElementDeclaration declaration)
+	{
+		return ClayElement.Open(id).Configure(declaration);
+	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static uint GetParentElementId()
@@ -292,7 +306,7 @@ public static class Clay
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static Clay_ElementId Id(Clay_String text)
 	{
-		return HashId(text, 0, 0);
+		return ClayInterop.Clay__HashString(text, 0);
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -304,7 +318,7 @@ public static class Clay
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static Clay_ElementId Id(Clay_String text, int offset)
 	{
-		return HashId(text, (uint)offset, 0);
+		return ClayInterop.Clay__HashStringWithOffset(text, (uint)offset, 0);
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -316,7 +330,7 @@ public static class Clay
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static Clay_ElementId IdLocal(Clay_String text)
 	{
-		return HashId(text, 0, GetParentElementId());
+		return ClayInterop.Clay__HashString(text, GetParentElementId());
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -328,12 +342,6 @@ public static class Clay
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static Clay_ElementId IdLocal(Clay_String text, int offset)
 	{
-		return HashId(text, (uint)offset, GetParentElementId());
-	}
-
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	internal static Clay_ElementId HashId(Clay_String text, uint offset, uint seed)
-	{
-		return ClayInterop.Clay__HashString(text, offset, seed);
+		return ClayInterop.Clay__HashStringWithOffset(text, (uint)offset, GetParentElementId());
 	}
 }

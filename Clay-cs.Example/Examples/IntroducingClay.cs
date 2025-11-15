@@ -66,6 +66,8 @@ public class IntroducingClay : IDisposable
 		RaylibClay.Fonts[0] = Raylib.LoadFont("resources/Roboto-Regular.ttf");
 		Raylib.SetTextureFilter(RaylibClay.Fonts[0].texture, TextureFilter.TEXTURE_FILTER_BILINEAR);
 
+		Clay.SetDebugModeEnabled(true);
+		
 		while (Raylib.WindowShouldClose() == false)
 		{
 			Clay.SetLayoutDimensions(new Clay_Dimensions
@@ -79,9 +81,8 @@ public class IntroducingClay : IDisposable
 
 			Clay.BeginLayout();
 
-			using (Clay.Element(new()
+			using (Clay.Element(Clay.Id(_clayString["OuterContainer"]), new()
 			{
-				id = Clay.Id(_clayString["OuterContainer"]),
 				backgroundColor = new Clay_Color(43, 41, 51),
 				layout = new()
 				{
@@ -92,9 +93,8 @@ public class IntroducingClay : IDisposable
 				}
 			}))
 			{
-				using (Clay.Element(new()
+				using (Clay.Element(Clay.Id(_clayString["HeaderBar"]), new()
 				{
-					id = Clay.Id(_clayString["HeaderBar"]),
 					backgroundColor = _contentBackgroundColor,
 					cornerRadius =  Clay_CornerRadius.All(8),
 					layout = new()
@@ -109,9 +109,8 @@ public class IntroducingClay : IDisposable
 					var fileButtonStr = _clayString["FileButton"];
 					var fileMenuStr = _clayString["FileMenu"];
 
-					using (Clay.Element(new()
+					using (Clay.Element(Clay.Id(fileButtonStr), new()
 					{
-						id = Clay.Id(fileButtonStr),
 						layout = new()
 						{
 							padding = Clay_Padding.HorVer(16, 8)
@@ -126,14 +125,14 @@ public class IntroducingClay : IDisposable
 							textColor = new Clay_Color(255, 255, 255),
 						});
 
+						Console.WriteLine(Clay.IsPointerOver(Clay.GetElementId(fileButtonStr)));
 						bool isMenuVisible = Clay.IsPointerOver(Clay.GetElementId(fileButtonStr))
 							|| Clay.IsPointerOver(Clay.GetElementId(fileMenuStr));
 
 						if (isMenuVisible)
 						{
-							using (Clay.Element(new()
+							using (Clay.Element(Clay.Id(fileMenuStr), new()
 							{
-								id = Clay.Id(fileMenuStr),
 								floating = new()
 								{
 									attachTo = Clay_FloatingAttachToElement.CLAY_ATTACH_TO_PARENT,
@@ -184,9 +183,8 @@ public class IntroducingClay : IDisposable
 					RenderHeaderButton(_clayString["Upload"]);
 				}
 
-				using (Clay.Element(new()
+				using (Clay.Element(Clay.Id(_clayString["LowerContent"]), new()
 				{
-					id = Clay.Id(_clayString["LowerContent"]),
 					layout = new()
 					{
 						sizing = new Clay_Sizing(Clay_SizingAxis.Grow(), Clay_SizingAxis.Grow()),
@@ -194,9 +192,8 @@ public class IntroducingClay : IDisposable
 					}
 				}))
 				{
-					using (Clay.Element(new()
+					using (Clay.Element(Clay.Id(_clayString["Sidebar"]), new()
 					{
-						id = Clay.Id(_clayString["Sidebar"]),
 						backgroundColor = _contentBackgroundColor,
 						layout = new()
 						{
@@ -264,23 +261,25 @@ public class IntroducingClay : IDisposable
 						}
 					}
 
-					using (Clay.Element(new()
+					using (var content = Clay.OpenElement(Clay.Id(_clayString["MainContent"])))
 					{
-						id = Clay.Id(_clayString["MainContent"]),
-						scroll = new()
+						content.Configure(new()
 						{
-							vertical = true
-						},
-						layout = new()
-						{
-							layoutDirection = Clay_LayoutDirection.CLAY_TOP_TO_BOTTOM,
-							childGap = 16,
-							padding = Clay_Padding.All(16),
-							sizing = new Clay_Sizing(Clay_SizingAxis.Grow(), Clay_SizingAxis.Grow())
-						},
-						backgroundColor = _contentBackgroundColor,
-					}))
-					{
+							clip = new()
+							{
+								vertical = true,
+								childOffset = Clay.GetScrollOffset(),
+							},
+							layout = new()
+							{
+								layoutDirection = Clay_LayoutDirection.CLAY_TOP_TO_BOTTOM,
+								childGap = 16,
+								padding = Clay_Padding.All(16),
+								sizing = new Clay_Sizing(Clay_SizingAxis.Grow(), Clay_SizingAxis.Grow())
+							},
+							backgroundColor = _contentBackgroundColor,
+						});
+						
 						var doc = _documents[_selectedDocumentIndex];
 						Clay.TextElement(doc.Title, new()
 						{
