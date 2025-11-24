@@ -63,7 +63,7 @@ public static class Clay
 		var arena = ClayInterop.Clay_CreateArenaWithCapacityAndMemory(memorySize, (void*)ptr);
 		return new ClayArenaHandle { Arena = arena, Memory = ptr };
 	}
-
+	
 	internal static void FreeArena(ClayArenaHandle handle)
 	{
 		// use the memory to find the linked context
@@ -75,18 +75,18 @@ public static class Clay
 				key = clayContext.Key;
 			}
 		}
-
+		
 		// free everything
 		ClayContexts.Remove(key);
 		Marshal.FreeHGlobal(handle.Memory);
 	}
-
+	
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static unsafe Clay_Context* GetCurrentContext()
 	{
 		return ClayInterop.Clay_GetCurrentContext();
 	}
-
+	
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	internal static unsafe ClayManagedContext GetManagedContext()
 	{
@@ -130,7 +130,7 @@ public static class Clay
 			ErrorHandler = errorHandler,
 			ArenaMemory = handle.Memory,
 		};
-
+		
 		return context;
 	}
 
@@ -194,7 +194,7 @@ public static class Clay
 	{
 		var context = GetManagedContext();
 		context.OnHover.Add(onHover);
-
+		
 		var ptr = Marshal.GetFunctionPointerForDelegate(onHover);
 		var castPtr = (delegate* unmanaged[Cdecl]<Clay_ElementId, Clay_PointerData, nint, void>)ptr;
 		ClayInterop.Clay_OnHover(castPtr, userData);
@@ -222,7 +222,7 @@ public static class Clay
 	{
 		var context = GetManagedContext();
 		context.QueryScrollOffset = queryScrollOffsetFunction;
-
+		
 		var ptr = Marshal.GetFunctionPointerForDelegate(queryScrollOffsetFunction);
 		var castPtr = (delegate* unmanaged[Cdecl]<uint, void*, Clay_Vector2>)ptr;
 		ClayInterop.Clay_SetQueryScrollOffsetFunction(castPtr, userData);
@@ -346,3 +346,4 @@ public static class Clay
 		return ClayInterop.Clay__HashStringWithOffset(text, (uint)offset, GetParentElementId());
 	}
 }
+
