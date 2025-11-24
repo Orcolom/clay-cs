@@ -100,29 +100,30 @@ public static class Clay
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static unsafe void SetMeasureTextFunction(ClayMeasureTextDelegate measureText)
+	public static unsafe void SetMeasureTextFunction(ClayMeasureTextDelegate measureText, void* userData = null)
 	{
 		var context = GetManagedContext();
 		context.MeasureText = measureText;
 		
 		var ptr = Marshal.GetFunctionPointerForDelegate(measureText);
 		var castPtr = (delegate* unmanaged[Cdecl]<Clay_StringSlice, Clay_TextElementConfig*, void*, Clay_Dimensions>)ptr;
-		ClayInterop.Clay_SetMeasureTextFunction(castPtr, null);
+		ClayInterop.Clay_SetMeasureTextFunction(castPtr, userData);
 	}
 
 	public static unsafe Clay_Context* Initialize(
 		ClayArenaHandle handle,
 		Clay_Dimensions dimensions,
-		ClayErrorDelegate errorHandler)
+		ClayErrorDelegate errorHandler,
+		void* errorUserData = null)
 	{
-		// TODO: handle userdata
 		var ptr = Marshal.GetFunctionPointerForDelegate(errorHandler);
 		var castPtr = (delegate* unmanaged[Cdecl]<Clay_ErrorData, void>)ptr;
 
 		var context = ClayInterop.Clay_Initialize(handle.Arena, dimensions, new Clay_ErrorHandler
 		{
 			errorHandlerFunction = castPtr,
-		});
+			userData = errorUserData,
+        });
 
 		ClayContexts[(IntPtr)context] = new ClayManagedContext
 		{
@@ -217,14 +218,14 @@ public static class Clay
 		return ClayInterop.Clay_GetScrollOffset();
 	}
 
-	public static unsafe void SetQueryScrollOffsetFunction(ClayQueryScrollOffsetDelegate queryScrollOffsetFunction)
+	public static unsafe void SetQueryScrollOffsetFunction(ClayQueryScrollOffsetDelegate queryScrollOffsetFunction, void* userData = null)
 	{
 		var context = GetManagedContext();
 		context.QueryScrollOffset = queryScrollOffsetFunction;
 		
 		var ptr = Marshal.GetFunctionPointerForDelegate(queryScrollOffsetFunction);
 		var castPtr = (delegate* unmanaged[Cdecl]<uint, void*, Clay_Vector2>)ptr;
-		ClayInterop.Clay_SetQueryScrollOffsetFunction(castPtr, null);
+		ClayInterop.Clay_SetQueryScrollOffsetFunction(castPtr, userData);
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
