@@ -346,4 +346,3 @@ public static class Clay
 		return ClayInterop.Clay__HashStringWithOffset(text, (uint)offset, GetParentElementId());
 	}
 }
-
