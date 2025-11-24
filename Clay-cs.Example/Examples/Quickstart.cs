@@ -31,9 +31,8 @@ public class QuickStart
 			// build your layout
 			Clay.BeginLayout();
 
-			using (Clay.Element(new()
+			using (Clay.Element(Clay.Id("QuickStart"), new()
 			{
-				id = Clay.Id("QuickStart"),
 				backgroundColor = new Clay_Color(25, 0, 25),
 				layout = new()
 				{
@@ -41,7 +40,7 @@ public class QuickStart
 				}
 			}))
 			{
-				Clay.OpenTextElement("Some text here", new()
+				Clay.TextElement("Some text here", new()
 				{
 					fontSize = 16,
 					textColor = new Clay_Color(255, 255, 255)

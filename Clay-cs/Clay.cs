@@ -102,7 +102,9 @@ public static class Clay
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static unsafe void SetMeasureTextFunction(ClayMeasureTextDelegate measureText, void* userData = null)
 	{
-		// TODO: do we need to dealloc the ptr?
+		var context = GetManagedContext();
+		context.MeasureText = measureText;
+		
 		var ptr = Marshal.GetFunctionPointerForDelegate(measureText);
 		var castPtr = (delegate* unmanaged[Cdecl]<Clay_StringSlice, Clay_TextElementConfig*, void*, Clay_Dimensions>)ptr;
 		ClayInterop.Clay_SetMeasureTextFunction(castPtr, userData);
@@ -210,6 +212,12 @@ public static class Clay
 		ClayInterop.Clay_UpdateScrollContainers(enableDragScrolling, moveDelta, timeDelta);
 	}
 
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static Vector2 GetScrollOffset()
+	{
+		return ClayInterop.Clay_GetScrollOffset();
+	}
+
 	public static unsafe void SetQueryScrollOffsetFunction(ClayQueryScrollOffsetDelegate queryScrollOffsetFunction, void* userData = null)
 	{
 		var context = GetManagedContext();
@@ -245,19 +253,19 @@ public static class Clay
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static void OpenElement()
+	public static ClayElement OpenElement() => ClayElement.Open();
+	
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static ClayElement OpenElement(Clay_ElementId id) => ClayElement.Open(id);
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static void TextElement(string text, Clay_TextElementConfig c)
 	{
-		ClayInterop.Clay__OpenElement();
+		TextElement(ClayStrings.Get(text), c);
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static void OpenTextElement(string text, Clay_TextElementConfig c)
-	{
-		OpenTextElement(ClayStrings.Get(text), c);
-	}
-
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static unsafe void OpenTextElement(Clay_String text, Clay_TextElementConfig c)
+	public static unsafe void TextElement(Clay_String text, Clay_TextElementConfig c)
 	{
 		ClayInterop.Clay__OpenTextElement(text, ClayInterop.Clay__StoreTextElementConfig(c));
 	}
@@ -273,15 +281,15 @@ public static class Clay
 	{
 		ClayInterop.Clay__CloseElement();
 	}
-
-	public static ClayElement Element()
-	{
-		return ClayElement.Open();
-	}
-
+	
 	public static ClayElement Element(Clay_ElementDeclaration declaration)
 	{
 		return ClayElement.Open().Configure(declaration);
+	}
+	
+	public static ClayElement Element(Clay_ElementId id, Clay_ElementDeclaration declaration)
+	{
+		return ClayElement.Open(id).Configure(declaration);
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -299,7 +307,7 @@ public static class Clay
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static Clay_ElementId Id(Clay_String text)
 	{
-		return HashId(text, 0, 0);
+		return ClayInterop.Clay__HashString(text, 0);
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -311,7 +319,7 @@ public static class Clay
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static Clay_ElementId Id(Clay_String text, int offset)
 	{
-		return HashId(text, (uint)offset, 0);
+		return ClayInterop.Clay__HashStringWithOffset(text, (uint)offset, 0);
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -323,7 +331,7 @@ public static class Clay
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static Clay_ElementId IdLocal(Clay_String text)
 	{
-		return HashId(text, 0, GetParentElementId());
+		return ClayInterop.Clay__HashString(text, GetParentElementId());
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -335,12 +343,6 @@ public static class Clay
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static Clay_ElementId IdLocal(Clay_String text, int offset)
 	{
-		return HashId(text, (uint)offset, GetParentElementId());
-	}
-
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	internal static Clay_ElementId HashId(Clay_String text, uint offset, uint seed)
-	{
-		return ClayInterop.Clay__HashString(text, offset, seed);
+		return ClayInterop.Clay__HashStringWithOffset(text, (uint)offset, GetParentElementId());
 	}
 }

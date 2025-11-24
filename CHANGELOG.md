@@ -1,3 +1,11 @@
+# 0.4.x - 2025-11-15
+- UPDATED CLAY: from 0.13.0 `b33ba4f` to 0.14.0 `c13feb2`
+- Fixed: MeasureTextDelegate now gets cached correctly to avoid being collected by Gc
+- BREAKING: Merged `Clay.Element()` (without argument) into `Clay.OpenElement` to avoid confusion with `Clay.Element(Clay_ElementDeclaration)` as using `Clay.Element()` would cause unrecoverable exceptions if not closed.
+- BREAKING: Renamed `Clay.OpenTextElement` to `Clay.TextElement` as you don't have to close it.
+- Added: `Clay_CornerRadius` utility methods `Top()`, `Bottom()`, `Left()`,  `Right()`
+- Added support for `netstandard2.1`.
+
 # 0.3.1 - 2024-03-02
 - First automated release
 - Added: nugget package to readme

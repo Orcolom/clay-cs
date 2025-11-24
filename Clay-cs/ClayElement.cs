@@ -4,7 +4,13 @@ public struct ClayElement : IDisposable
 {
 	public static ClayElement Open()
 	{
-		Clay.OpenElement();
+		ClayInterop.Clay__OpenElement();
+		return new ClayElement();
+	}
+	
+	public static ClayElement Open(Clay_ElementId id)
+	{
+		ClayInterop.Clay__OpenElementWithId(id);
 		return new ClayElement();
 	}
 	

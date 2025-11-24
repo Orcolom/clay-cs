@@ -13,7 +13,7 @@
 		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-        <Version>0.3.1</Version>
+        <Version>0.4.0</Version>
 		<Authors>Orcolom</Authors>
         <Description>Fully featured binding for clay.h
 GC safe, avoiding unneeded classes, and made as low level as possible</Description>

@@ -121,6 +121,34 @@ public partial struct Clay_CornerRadius
 		topLeft = value,
 		topRight = value,
 	};
+	
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static Clay_CornerRadius Top(ushort value) => new()
+	{
+		topLeft = value,
+		topRight = value,
+	};
+	
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static Clay_CornerRadius Bottom(ushort value) => new()
+	{
+		bottomLeft = value,
+		bottomRight = value,
+	};
+	
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static Clay_CornerRadius Left(ushort value) => new()
+	{
+		bottomLeft = value,
+		topLeft = value,
+	};
+	
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static Clay_CornerRadius Right(ushort value) => new()
+	{
+		bottomRight = value,
+		topRight = value,
+	};
 }
 
 public partial struct Clay_Sizing
